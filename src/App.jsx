@@ -1,12 +1,26 @@
-import StatusBadge from '@/components/custom/StatusBadge'
+import { login } from './services/authService'
 
-export default function App() {
+function App() {
+  async function handleVerify() {
+    try {
+      const result = await login('owner1@rentoo.com', 'password')
+      console.log('LOGIN RESPONSE SHAPE:', result)
+      console.log('  result.data:', result.data)
+      console.log('  result.token:', result.token)
+      console.log('  result.data.id:', result.data?.id)
+    } catch (error) {
+      console.error('LOGIN FAILED:', error)
+    }
+  }
+
   return (
-    <div className="p-8 flex gap-4 items-center">
-      <StatusBadge status="draft" />
-      <StatusBadge status="active" />
-      <StatusBadge status="finalized" />
-      <StatusBadge status="unknown" />
+    <div style={{ padding: '2rem' }}>
+      <h1>Session 2 — API Verification</h1>
+      <button onClick={handleVerify}>
+        Test login (check console)
+      </button>
     </div>
   )
 }
+
+export default App
