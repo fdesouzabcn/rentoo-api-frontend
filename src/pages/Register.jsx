@@ -176,6 +176,7 @@ export default function Register() {
   const handleBlur = (e) => {
     const { name, value } = e.target
     setTouched((prev) => ({ ...prev, [name]: true }))
+    if (name === 'password') setShowStrength(false)
     const validator = VALIDATORS[name]
     if (validator) {
       const error = validator(value)
@@ -264,9 +265,10 @@ export default function Register() {
 
           {/* Brand mark */}
           <div className="flex flex-col items-center gap-2.5 mb-8">
-            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+            <Link to="/" className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center
+                                    hover:bg-blue-700 transition-colors">
               <HouseIcon className="w-6 h-6 text-white" />
-            </div>
+            </Link>
             <span className="text-2xl font-bold text-slate-900">Rentoo</span>
             <span className="text-sm text-slate-500">Crea tu cuenta de propietario</span>
           </div>
