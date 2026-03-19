@@ -24,6 +24,7 @@ dist-ssr
 *.sln
 *.sw?
 session-*-*-handoff.txt
+spec-a-decisions-so-far.txt
 
 # Environment variables
 .env
