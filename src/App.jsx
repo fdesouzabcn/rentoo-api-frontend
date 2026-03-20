@@ -2,19 +2,22 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthContext'
 import ProtectedRoute from '@/router/ProtectedRoute'
 import Layout from '@/components/layout/Layout'
-
-// Auth pages (public)
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
-
-// Session 4 — built this session
 import Profile from '@/pages/Profile'
+import PropertiesList from '@/pages/Properties/PropertiesList'
+import PropertyDetail from '@/pages/Properties/PropertyDetail'
 
-// Placeholders — will be replaced in upcoming sessions
-const Dashboard = () => (
-  <Layout>
-    <div className="p-8 text-lg font-semibold text-slate-700">Dashboard — Session 10</div>
-  </Layout>
+// Placeholder
+const Placeholder = ({ label }) => (
+  <div className="py-20 text-center text-sm text-slate-400">{label}</div>
+)
+
+// Route wrapper helper
+const Protected = ({ children }) => (
+  <ProtectedRoute>
+    <Layout>{children}</Layout>
+  </ProtectedRoute>
 )
 
 export default function App() {
@@ -22,57 +25,29 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-
-          {/* ── Public routes ────────────────────────────────────────────── */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* ── Protected routes ─────────────────────────────────────────── */}
+          <Route path="/my-profile"  element={<Protected><Profile /></Protected>} />
+          <Route path="/users/:uuid" element={<Protected><Profile /></Protected>} />
 
-          {/* Dashboard — Session 10 */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/properties"           element={<Protected><PropertiesList /></Protected>} />
+          <Route path="/properties/create"    element={<Protected><Placeholder label="PropertyCreate — Session 6" /></Protected>} />
+          <Route path="/properties/:uuid"     element={<Protected><PropertyDetail /></Protected>} />
+          <Route path="/properties/:uuid/edit" element={<Protected><Placeholder label="PropertyEdit — Session 6" /></Protected>} />
 
-          {/* Own profile */}
-          <Route
-            path="/my-profile"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Profile />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/contracts"            element={<Protected><Placeholder label="ContractsList — Session 7" /></Protected>} />
+          <Route path="/contracts/new"        element={<Protected><Placeholder label="ContractCreate — Session 8" /></Protected>} />
+          <Route path="/contracts/:uuid"      element={<Protected><Placeholder label="ContractDetail — Session 7" /></Protected>} />
+          <Route path="/contracts/:uuid/edit" element={<Protected><Placeholder label="ContractEdit — Session 8" /></Protected>} />
 
-          {/* Admin viewing any user's profile */}
-          <Route
-            path="/users/:uuid"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Profile />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/admin/users" element={<Protected><Placeholder label="UsersList — Session 9" /></Protected>} />
 
-          {/* ── Redirects ────────────────────────────────────────────────── */}
+          <Route path="/dashboard" element={<Protected><Placeholder label="Dashboard — Session 10" /></Protected>} />
 
-          {/* Old /profile path → new /my-profile */}
-          <Route path="/profile" element={<Navigate to="/my-profile" replace />} />
-
-          {/* Root → dashboard for authenticated users */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
-          {/* Catch-all → dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Redirects */}
+          <Route path="/"  element={<Navigate to="/dashboard" replace />} />
+          <Route path="*"  element={<Navigate to="/dashboard" replace />} />
 
         </Routes>
       </AuthProvider>
