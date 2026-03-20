@@ -1,4 +1,4 @@
-import api from './api'
+import api from '@/services/api'
 
 export async function getContracts() {
   const response = await api.get('/contracts')
@@ -21,5 +21,6 @@ export async function updateContract(uuid, data) {
 }
 
 export async function deleteContract(uuid) {
-  await api.delete(`/contracts/${uuid}`)
+  const response = await api.delete(`/contracts/${uuid}`)
+   return response
 }
