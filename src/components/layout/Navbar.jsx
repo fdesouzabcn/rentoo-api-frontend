@@ -2,15 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { getFinancialSummary } from '@/services/financialService'
-import {
-  HouseIcon,
-  PlusIcon,
-  BellIcon,
-  UserIcon,
-  MenuIcon,
-  CloseIcon,
-  ChevronRightIcon,
-} from '@/components/icons'
+import { HouseIcon, PlusIcon, BellIcon, UserIcon, MenuIcon, CloseIcon, ChevronRightIcon } from '@/components/icons'
 
 // ─── Nav link helper ──────────────────────────────────────────────────────────
 
