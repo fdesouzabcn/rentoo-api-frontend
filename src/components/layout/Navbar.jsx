@@ -2,72 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { getFinancialSummary } from '@/services/financialService'
+import { HouseIcon, PlusIcon, BellIcon, UserIcon, MenuIcon, CloseIcon, ChevronRightIcon } from '@/components/icons'
 
-// ─── SVG Icons ──────────────────────────────────────────────────────────────
-
-function HouseIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round"
-        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10
-           a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4
-           a1 1 0 001 1m-6 0h6" />
-    </svg>
-  )
-}
-
-function PlusIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-    </svg>
-  )
-}
-
-function BellIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round"
-        d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-    </svg>
-  )
-}
-
-function UserIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round"
-        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118
-           a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-    </svg>
-  )
-}
-
-function MenuIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  )
-}
-
-function CloseIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  )
-}
-
-function ChevronRightIcon({ className }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-    </svg>
-  )
-}
-
-// ─── Nav link helper ─────────────────────────────────────────────────────────
+// ─── Nav link helper ──────────────────────────────────────────────────────────
 
 function NavLink({ to, children, isAdmin, onClick }) {
   const location = useLocation()
@@ -85,6 +22,28 @@ function NavLink({ to, children, isAdmin, onClick }) {
         fontWeight: active ? 500 : 400,
         color: active ? (adminLink ? '#7e22ce' : activeColour) : adminLink ? '#7e22ce' : undefined,
         borderBottom: active ? `2px solid ${adminLink ? '#7e22ce' : activeColour}` : '2px solid transparent',
+      }}
+    >
+      {children}
+    </Link>
+  )
+}
+
+// ─── Mobile nav link with active pill ────────────────────────────────────────
+
+function MobileNavLink({ to, children, accent, onClick }) {
+  const location = useLocation()
+  const active = location.pathname === to || location.pathname.startsWith(to + '/')
+
+  return (
+    <Link
+      to={to}
+      onClick={onClick}
+      className="flex items-center px-3 py-2.5 rounded-lg text-sm transition-colors"
+      style={{
+        backgroundColor: active ? accent : undefined,
+        color: active ? 'white' : '#475569',
+        fontWeight: active ? 500 : 400,
       }}
     >
       {children}
@@ -156,7 +115,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Main bar ─────────────────────────────────────────────────────── */}
+      {/* ── Main bar ──────────────────────────────────────────────────────── */}
       <header
         className="sticky top-0 z-10 w-full bg-white"
         style={{ borderBottom: '1px solid #e2e8f0', height: '56px' }}
@@ -171,10 +130,7 @@ export default function Navbar() {
             <Link to="/" className="flex items-center gap-2 no-underline flex-shrink-0">
               <div
                 className="flex items-center justify-center rounded-[7px] flex-shrink-0"
-                style={{
-                  width: '28px', height: '28px',
-                  backgroundColor: accent,
-                }}
+                style={{ width: '28px', height: '28px', backgroundColor: accent }}
               >
                 <HouseIcon className="w-4 h-4 text-white" />
               </div>
@@ -209,56 +165,54 @@ export default function Navbar() {
                 borderRadius: '7px',
                 padding: '7px 14px',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = accentHover }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = accent }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
             >
               <PlusIcon className="w-3.5 h-3.5" />
               Crear Nuevo
             </button>
 
-            {/* Bell notification */}
+            {/* Bell icon */}
             <div ref={bellRef} className="relative">
               <button
                 onClick={() => { setBellOpen((v) => !v); setAvatarOpen(false) }}
-                className="relative flex items-center justify-center rounded-[8px]
-                           transition-colors hover:bg-slate-100"
-                style={{ width: '34px', height: '34px' }}
+                className="relative flex items-center justify-center hover:bg-slate-100
+                           transition-colors"
+                style={{ width: '34px', height: '34px', borderRadius: '8px' }}
                 aria-label="Notificaciones"
               >
                 <BellIcon className="w-5 h-5 text-slate-600" />
                 {contractsExpiring > 0 && (
                   <span
                     className="absolute top-1 right-1 rounded-full bg-red-500"
-                    style={{ width: '7px', height: '7px', border: '1.5px solid white' }}
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      border: '1.5px solid white',
+                    }}
                   />
                 )}
               </button>
 
-              {/* Bell dropdown */}
-              {bellOpen && (
+              {bellOpen && contractsExpiring > 0 && (
                 <div
-                  className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200
-                             w-64 z-50 overflow-hidden"
+                  className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg
+                             border border-slate-200 w-64 z-50 overflow-hidden"
                 >
                   <div className="px-4 py-3 border-b border-slate-100">
                     <p className="text-sm font-medium text-slate-900">
-                      {contractsExpiring > 0
-                        ? `Tienes ${contractsExpiring} contrato${contractsExpiring > 1 ? 's' : ''} por vencer`
-                        : 'Sin notificaciones pendientes'
-                      }
+                      Tienes {contractsExpiring} contrato{contractsExpiring !== 1 ? 's' : ''} por vencer
                     </p>
                   </div>
-                  {contractsExpiring > 0 && (
-                    <div className="px-4 py-3">
-                      <Link
-                        to="/dashboard"
-                        onClick={() => setBellOpen(false)}
-                        className="text-sm font-medium text-blue-600 hover:underline"
-                      >
-                        Ver panel →
-                      </Link>
-                    </div>
-                  )}
+                  <div className="px-4 py-3">
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setBellOpen(false)}
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                    >
+                      Ver panel →
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
@@ -398,7 +352,6 @@ export default function Navbar() {
                 </MobileNavLink>
 
                 <div className="border-t border-slate-200 pt-2 mt-2">
-                  {/* Mobile create button */}
                   <button
                     onClick={handleCreateNew}
                     className="w-full flex items-center justify-center gap-1.5
@@ -432,26 +385,5 @@ export default function Navbar() {
         </div>
       )}
     </>
-  )
-}
-
-// Mobile nav link with active pill
-function MobileNavLink({ to, children, accent, onClick }) {
-  const location = useLocation()
-  const active = location.pathname === to || location.pathname.startsWith(to + '/')
-
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="flex items-center px-3 py-2.5 rounded-lg text-sm transition-colors"
-      style={{
-        backgroundColor: active ? accent : undefined,
-        color: active ? 'white' : '#475569',
-        fontWeight: active ? 500 : 400,
-      }}
-    >
-      {children}
-    </Link>
   )
 }

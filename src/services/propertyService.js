@@ -1,4 +1,4 @@
-import api from './api'
+import api from '@/services/api'
 
 export async function getProperties() {
   const response = await api.get('/properties')
@@ -21,5 +21,6 @@ export async function updateProperty(uuid, data) {
 }
 
 export async function deleteProperty(uuid) {
-  await api.delete(`/properties/${uuid}`)
+  const response = await api.delete(`/properties/${uuid}`)
+  return response
 }
