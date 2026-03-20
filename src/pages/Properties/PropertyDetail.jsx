@@ -356,7 +356,7 @@ export default function PropertyDetail() {
               key={contract.id}
               contract={contract}
               property={property}
-              variant="compact"
+              variant="inline"
             />
           ))
         )}
