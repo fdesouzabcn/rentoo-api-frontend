@@ -16,10 +16,10 @@ import {
   GridIcon,
   LightningBoltIcon,
   ShieldCheckIcon,
-  EuroIcon,
+  EuroCircleIcon,
   CheckIcon,
   ExclamationTriangleIcon,
-  InfoCircleIcon,
+  InfoIcon,
   PencilIcon,
 } from '@/components/icons'
 import {
@@ -49,7 +49,7 @@ function FieldError({ error }) {
   if (!error) return null
   return (
     <p className="flex items-center gap-1 mt-0.5 text-xs text-red-600">
-      <InfoCircleIcon className="w-[11px] h-[11px] flex-shrink-0" />
+      <InfoIcon className="w-[11px] h-[11px] flex-shrink-0" />
       {error}
     </p>
   )
@@ -709,7 +709,7 @@ export default function PropertyForm({ initialValues = null, onSubmit, isSubmitt
         {/* ================================================================ */}
         {/* SECTION 5 — Información financiera (optional)                    */}
         {/* ================================================================ */}
-        <SectionCard icon={EuroIcon} title="Información financiera" optional>
+        <SectionCard icon={EuroCircleIcon} title="Información financiera" optional>
           <div className="flex flex-col gap-3.5">
             <div className="grid grid-cols-2 gap-3">
               <FormField
@@ -772,7 +772,7 @@ export default function PropertyForm({ initialValues = null, onSubmit, isSubmitt
 
             {/* Info banner */}
             <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-200 rounded-lg px-3.5 py-2.5">
-              <InfoCircleIcon className="w-3.5 h-3.5 stroke-blue-600 flex-shrink-0 mt-0.5" />
+              <InfoIcon className="w-3.5 h-3.5 stroke-blue-600 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-blue-800 leading-relaxed">
                 Campos opcionales. Esta información aparecerá en el resumen financiero y ayuda a calcular la rentabilidad del arrendamiento.
               </p>
