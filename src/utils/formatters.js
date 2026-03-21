@@ -37,3 +37,14 @@ export const isCertExpiringSoon = (expiryDateString, thresholdDays = 90) => {
   const daysUntil = (expiry - new Date()) / (1000 * 60 * 60 * 24)
   return daysUntil <= thresholdDays
 }
+
+export const getCertStatus = (expiryDateString, thresholdDays = 90) => {
+  if (!expiryDateString) return null
+  const expiry = new Date(expiryDateString)
+  if (isNaN(expiry.getTime())) return null
+  const now = new Date()
+  if (expiry < now) return 'expired'
+  const daysUntil = (expiry - now) / (1000 * 60 * 60 * 24)
+  if (daysUntil <= thresholdDays) return 'warning'
+  return 'ok'
+}
