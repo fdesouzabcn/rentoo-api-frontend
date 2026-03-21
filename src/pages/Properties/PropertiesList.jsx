@@ -22,6 +22,7 @@ import {
   InfoIcon,
   SquaresIcon,
   BedIcon,
+  ShieldCheckIcon,
 } from '@/components/icons'
 import { formatCurrency, formatDate, isCertExpiringSoon } from '@/utils/formatters'
 
@@ -146,9 +147,9 @@ function PropertyRow({ property, onDelete }) {
           {/* Certificates */}
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <DocumentTextIcon className="w-[11px] h-[11px] text-slate-400" />
+              <ShieldCheckIcon className="w-[11px] h-[11px] text-slate-400" />
               <span className="text-[10px] uppercase tracking-wide text-slate-400">
-                Certificados
+                Certificados y documentación
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -162,15 +163,24 @@ function PropertyRow({ property, onDelete }) {
                   </span>
                   <EnergyBadge rating={property.energy_certificate_rating} />
                 </div>
-                <FieldValue label="Número" value={property.energy_certificate_number} />
-                {energyExpiring ? (
-                  <span className="text-xs text-amber-700 flex items-center gap-1">
-                    <WarningTriangleIcon className="w-[11px] h-[11px]" />
-                    {formatDate(property.energy_certificate_expiry)} · vence pronto
-                  </span>
-                ) : (
-                  <FieldValue label="Vencimiento" value={formatDate(property.energy_certificate_expiry)} />
-                )}
+                <div className="grid grid-cols-2 gap-2">
+                  <FieldValue label="Número" value={property.energy_certificate_number} />
+                  <div>
+                    {energyExpiring ? (
+                      <>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wide font-medium block mb-0.5">
+                          Vencimiento
+                        </span>
+                        <span className="text-xs text-amber-700 flex items-center gap-1">
+                          <WarningTriangleIcon className="w-[11px] h-[11px]" />
+                          {formatDate(property.energy_certificate_expiry)} · vence pronto
+                        </span>
+                      </>
+                    ) : (
+                      <FieldValue label="Vencimiento" value={formatDate(property.energy_certificate_expiry)} />
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Habitabilidad */}
@@ -182,15 +192,24 @@ function PropertyRow({ property, onDelete }) {
                     Cédula de habitabilidad
                   </span>
                 </div>
-                <FieldValue label="Número" value={property.habitability_certificate_number} />
-                {habitabilityExpiring ? (
-                  <span className="text-xs text-amber-700 flex items-center gap-1">
-                    <WarningTriangleIcon className="w-[11px] h-[11px]" />
-                    {formatDate(property.habitability_certificate_expiry)} · vence pronto
-                  </span>
-                ) : (
-                  <FieldValue label="Vencimiento" value={formatDate(property.habitability_certificate_expiry)} />
-                )}
+                <div className="grid grid-cols-2 gap-2">
+                  <FieldValue label="Número" value={property.habitability_certificate_number} />
+                  <div>
+                    {habitabilityExpiring ? (
+                      <>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wide font-medium block mb-0.5">
+                          Vencimiento
+                        </span>
+                        <span className="text-xs text-amber-700 flex items-center gap-1">
+                          <WarningTriangleIcon className="w-[11px] h-[11px]" />
+                          {formatDate(property.habitability_certificate_expiry)} · vence pronto
+                        </span>
+                      </>
+                    ) : (
+                      <FieldValue label="Vencimiento" value={formatDate(property.habitability_certificate_expiry)} />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

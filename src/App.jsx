@@ -7,6 +7,8 @@ import Register from '@/pages/Register'
 import Profile from '@/pages/Profile'
 import PropertiesList from '@/pages/Properties/PropertiesList'
 import PropertyDetail from '@/pages/Properties/PropertyDetail'
+import PropertyCreate from '@/pages/Properties/PropertyCreate'
+import PropertyEdit from '@/pages/Properties/PropertyEdit'
 
 // Placeholder
 const Placeholder = ({ label }) => (
@@ -31,10 +33,10 @@ export default function App() {
           <Route path="/my-profile"  element={<Protected><Profile /></Protected>} />
           <Route path="/users/:uuid" element={<Protected><Profile /></Protected>} />
 
-          <Route path="/properties"           element={<Protected><PropertiesList /></Protected>} />
-          <Route path="/properties/create"    element={<Protected><Placeholder label="PropertyCreate — Session 6" /></Protected>} />
-          <Route path="/properties/:uuid"     element={<Protected><PropertyDetail /></Protected>} />
-          <Route path="/properties/:uuid/edit" element={<Protected><Placeholder label="PropertyEdit — Session 6" /></Protected>} />
+          <Route path="/properties"             element={<Protected><PropertiesList /></Protected>} />
+          <Route path="/properties/create"      element={<Protected><PropertyCreate /></Protected>} />
+          <Route path="/properties/:uuid"       element={<Protected><PropertyDetail /></Protected>} />
+          <Route path="/properties/:uuid/edit"  element={<Protected><PropertyEdit /></Protected>} />
 
           <Route path="/contracts"            element={<Protected><Placeholder label="ContractsList — Session 7" /></Protected>} />
           <Route path="/contracts/new"        element={<Protected><Placeholder label="ContractCreate — Session 8" /></Protected>} />
@@ -48,7 +50,6 @@ export default function App() {
           {/* Redirects */}
           <Route path="/"  element={<Navigate to="/dashboard" replace />} />
           <Route path="*"  element={<Navigate to="/dashboard" replace />} />
-
         </Routes>
       </AuthProvider>
     </BrowserRouter>
