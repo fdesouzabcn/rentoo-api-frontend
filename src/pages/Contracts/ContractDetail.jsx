@@ -74,10 +74,8 @@ export default function ContractDetail() {
     }
   }
 
-  // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) return <LoadingSpinner />
 
-  // ── Error ──────────────────────────────────────────────────────────────────
   if (error) {
     const msg =
       error.status === 403 ? 'No tienes permiso para ver este contrato.' :
@@ -95,7 +93,6 @@ export default function ContractDetail() {
   const hasTenant2 = Boolean(contract.tenant2_name)
   const hasIrpa    = contract.is_tensioned_area && contract.irpa_value
 
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div>
       {/* Print styles — co-located with the component */}

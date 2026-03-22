@@ -8,8 +8,7 @@ import GroupLabel from '@/components/custom/GroupLabel'
 import LoadingSpinner from '@/components/custom/LoadingSpinner'
 import { InfoIcon, PlusIcon } from '@/components/icons'
 
-// Sort order: active first, then draft, then finalized.
-// Within each status group, most recent start_date first.
+
 const STATUS_ORDER = { active: 0, draft: 1, finalized: 2 }
 
 function sortContracts(contracts) {
@@ -55,10 +54,8 @@ export default function ContractsList() {
   // Contracts whose property_id doesn't appear in the properties array
   const orphaned = contracts.filter((c) => !propertyMap[c.property_id])
 
-  // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) return <LoadingSpinner />
 
-  // ── Error ──────────────────────────────────────────────────────────────────
   if (error) {
     const msg =
       error.status === 403 ? 'No tienes permiso para ver los contratos.' :
@@ -72,7 +69,6 @@ export default function ContractsList() {
     )
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div>
       {/* Page header */}

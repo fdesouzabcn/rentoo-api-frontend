@@ -45,9 +45,9 @@ export default function App() {
           <Route path="/contracts/:uuid"      element={<Protected><ContractDetail /></Protected>} />
           <Route path="/contracts/:uuid/edit" element={<Protected><Placeholder label="ContractEdit" /></Protected>} />
 
-          <Route path="/admin/users" element={<Protected><Placeholder label="UsersList — Session 9" /></Protected>} />
+          <Route path="/admin/users" element={<Protected><Placeholder label="UsersList" /></Protected>} />
 
-          <Route path="/dashboard" element={<Protected><Placeholder label="Dashboard — Session 10" /></Protected>} />
+          <Route path="/dashboard" element={<Protected><Placeholder label="Dashboard" /></Protected>} />
 
           {/* Redirects */}
           <Route path="/"  element={<Navigate to="/dashboard" replace />} />
