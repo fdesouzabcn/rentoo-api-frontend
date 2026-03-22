@@ -11,6 +11,8 @@ import PropertyCreate from '@/pages/Properties/PropertyCreate'
 import PropertyEdit from '@/pages/Properties/PropertyEdit'
 import ContractsList from '@/pages/Contracts/ContractsList'
 import ContractDetail from '@/pages/Contracts/ContractDetail'
+import ContractCreate from '@/pages/Contracts/ContractCreate'
+import ContractEdit from '@/pages/Contracts/ContractEdit'
 
 // Placeholder
 const Placeholder = ({ label }) => (
@@ -41,9 +43,9 @@ export default function App() {
           <Route path="/properties/:uuid/edit"  element={<Protected><PropertyEdit /></Protected>} />
 
           <Route path="/contracts"            element={<Protected><ContractsList /></Protected>} />
-          <Route path="/contracts/new"        element={<Protected><Placeholder label="ContractCreate" /></Protected>} />
+          <Route path="/contracts/new"        element={<Protected><ContractCreate /></Protected>} />
           <Route path="/contracts/:uuid"      element={<Protected><ContractDetail /></Protected>} />
-          <Route path="/contracts/:uuid/edit" element={<Protected><Placeholder label="ContractEdit" /></Protected>} />
+          <Route path="/contracts/:uuid/edit" element={<Protected><ContractEdit /></Protected>} />
 
           <Route path="/admin/users" element={<Protected><Placeholder label="UsersList" /></Protected>} />
 
