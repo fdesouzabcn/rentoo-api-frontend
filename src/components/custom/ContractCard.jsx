@@ -5,12 +5,19 @@ import {
   ChevronRightIcon,
   MapPinIcon,
   UserIcon,
+  WarningTriangleIcon,
 } from '@/components/icons'
-import { formatCurrency, formatDate } from '@/utils/formatters'
+import {
+  formatCurrency,
+  formatDate,
+  isContractExpiringSoon,
+  formatContractExpiryMessage,
+} from '@/utils/formatters'
 
 // Shared component for rendering a contract.
-// variant='full'    → Card used in PropertiesList and Profile
+// variant='full'    → Card used in ContractsList and Profile
 //                     (full card with header, meta grid, footer)
+//                     Includes expiry warning treatment (amber border + inline message).
 // variant='compact' → Row used in PropertyDetail
 //                     (single horizontal row)
 // variant='inline'  → Borderless row that sits inside a parent card.
@@ -21,15 +28,16 @@ import { formatCurrency, formatDate } from '@/utils/formatters'
 export default function ContractCard({ contract, property, variant = 'full' }) {
   const navigate = useNavigate()
   const isFinalized = contract.status === 'finalized'
- 
+  const expiring = isContractExpiringSoon(contract.end_date, contract.status)
+
   const tenantNames = [contract.tenant1_name, contract.tenant2_name]
     .filter(Boolean)
     .join(' + ')
- 
+
   // ── inline variant ────────────────────────────────────────────────────────
   // No outer border — sits cleanly inside PropertyDetail's contracts card.
   // Full meta grid for readability. Divider comes from border-t on the row.
- 
+
   if (variant === 'inline') {
     return (
       <div
@@ -53,15 +61,26 @@ export default function ContractCard({ contract, property, variant = 'full' }) {
             <StatusBadge status={contract.status} />
           </div>
         </div>
- 
+
         {/* Meta grid — same 4-column layout as full variant */}
         <div className="grid grid-cols-4 gap-2.5">
           <FieldValue label="Inicio"        value={formatDate(contract.start_date)} />
-          <FieldValue label="Fin"           value={contract.end_date ? formatDate(contract.end_date) : null} />
+
+          {/* Fin — with optional expiry warning row (text only, no border in inline) */}
+          <div>
+            <FieldValue label="Fin" value={contract.end_date ? formatDate(contract.end_date) : null} />
+            {expiring && (
+              <p className="inline-flex items-center gap-[3px] text-[11px] text-amber-700 mt-[2px]">
+                <WarningTriangleIcon className="w-[11px] h-[11px]" />
+                {formatContractExpiryMessage(contract.end_date)}
+              </p>
+            )}
+          </div>
+
           <FieldValue label="Renta mensual" value={formatCurrency(contract.monthly_rent)} />
           <FieldValue label="Fianza legal"  value={formatCurrency(contract.legal_deposit)} />
         </div>
- 
+
         {/* Footer */}
         <div className="flex items-center justify-between pt-1">
           <div className="flex gap-1.5 flex-wrap">
@@ -93,10 +112,10 @@ export default function ContractCard({ contract, property, variant = 'full' }) {
       </div>
     )
   }
- 
+
   // ── compact variant ───────────────────────────────────────────────────────
   // Single horizontal row. Financial info in one subtitle line.
- 
+
   if (variant === 'compact') {
     return (
       <div
@@ -142,15 +161,16 @@ export default function ContractCard({ contract, property, variant = 'full' }) {
       </div>
     )
   }
- 
-  // full variant (default) ────────────────────────────────────────────────
-  // Bordered card. Used in PropertiesList and Profile.
- 
+
+  // ── full variant (default) ────────────────────────────────────────────────
+  // Bordered card. Used in ContractsList and Profile.
+  // Expiry treatment: amber border + inline warning below Fin value.
+
   return (
     <div
-      className={`bg-white border border-slate-200 rounded-xl px-4 py-4 flex flex-col gap-3 ${
-        isFinalized ? 'opacity-[0.72]' : ''
-      }`}
+      className={`bg-white rounded-xl px-4 py-4 flex flex-col gap-3 border ${
+        expiring ? 'border-amber-300' : 'border-slate-200'
+      } ${isFinalized ? 'opacity-[0.72]' : ''}`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
@@ -171,15 +191,26 @@ export default function ContractCard({ contract, property, variant = 'full' }) {
           <StatusBadge status={contract.status} />
         </div>
       </div>
- 
+
       {/* Meta grid */}
       <div className="grid grid-cols-4 gap-2.5">
         <FieldValue label="Inicio"        value={formatDate(contract.start_date)} />
-        <FieldValue label="Fin"           value={contract.end_date ? formatDate(contract.end_date) : null} />
+
+        {/* Fin — with optional expiry warning row */}
+        <div>
+          <FieldValue label="Fin" value={contract.end_date ? formatDate(contract.end_date) : null} />
+          {expiring && (
+            <p className="inline-flex items-center gap-[3px] text-[11px] text-amber-700 mt-[2px]">
+              <WarningTriangleIcon className="w-[11px] h-[11px]" />
+              {formatContractExpiryMessage(contract.end_date)}
+            </p>
+          )}
+        </div>
+
         <FieldValue label="Renta mensual" value={formatCurrency(contract.monthly_rent)} />
         <FieldValue label="Fianza legal"  value={formatCurrency(contract.legal_deposit)} />
       </div>
- 
+
       {/* Footer */}
       <div className="flex items-center justify-between pt-2.5 border-t border-slate-100">
         <div className="flex gap-1.5 flex-wrap">
