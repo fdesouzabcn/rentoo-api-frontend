@@ -9,6 +9,7 @@ import PropertiesList from '@/pages/Properties/PropertiesList'
 import PropertyDetail from '@/pages/Properties/PropertyDetail'
 import PropertyCreate from '@/pages/Properties/PropertyCreate'
 import PropertyEdit from '@/pages/Properties/PropertyEdit'
+import ContractsList from '@/pages/Contracts/ContractsList'
 
 // Placeholder
 const Placeholder = ({ label }) => (
@@ -38,10 +39,10 @@ export default function App() {
           <Route path="/properties/:uuid"       element={<Protected><PropertyDetail /></Protected>} />
           <Route path="/properties/:uuid/edit"  element={<Protected><PropertyEdit /></Protected>} />
 
-          <Route path="/contracts"            element={<Protected><Placeholder label="ContractsList — Session 7" /></Protected>} />
-          <Route path="/contracts/new"        element={<Protected><Placeholder label="ContractCreate — Session 8" /></Protected>} />
-          <Route path="/contracts/:uuid"      element={<Protected><Placeholder label="ContractDetail — Session 7" /></Protected>} />
-          <Route path="/contracts/:uuid/edit" element={<Protected><Placeholder label="ContractEdit — Session 8" /></Protected>} />
+          <Route path="/contracts"            element={<Protected><ContractsList /></Protected>} />
+          <Route path="/contracts/new"        element={<Protected><Placeholder label="ContractCreate" /></Protected>} />
+          <Route path="/contracts/:uuid"      element={<Protected><Placeholder label="ContractDetail" /></Protected>} />
+          <Route path="/contracts/:uuid/edit" element={<Protected><Placeholder label="ContractEdit" /></Protected>} />
 
           <Route path="/admin/users" element={<Protected><Placeholder label="UsersList — Session 9" /></Protected>} />
 
