@@ -62,14 +62,7 @@ export default function Login() {
     setLoading(true)
     try {
       await login(formData.email, formData.password)
-      // rememberMe: move token to localStorage for persistence across tabs
-      if (rememberMe) {
-        const token = sessionStorage.getItem('rentoo_token')
-        const user = sessionStorage.getItem('rentoo_user')
-        if (token) localStorage.setItem('rentoo_token', token)
-        if (user) localStorage.setItem('rentoo_user', user)
-      }
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (err) {
       setBannerError(err.message ?? 'Error al iniciar sesión. Inténtalo de nuevo.')
     } finally {
