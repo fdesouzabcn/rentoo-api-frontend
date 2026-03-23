@@ -152,7 +152,7 @@ export default function Register() {
       await registerService(formData)
       // Reuse login() to complete two-step auth flow (sets token + fetches full user with roles)
       await login(formData.email, formData.password)
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (err) {
       if (err.errors && Object.keys(err.errors).length > 0) {
         setFieldErrors(err.errors)

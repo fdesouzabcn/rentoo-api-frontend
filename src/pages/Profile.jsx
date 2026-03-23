@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { getUser, deleteUser } from '@/services/userService'
 import { getProperties } from '@/services/propertyService'
@@ -117,6 +118,7 @@ export default function Profile() {
     setDeleteLoading(true)
     try {
       await deleteUser(profileUuid)
+      toast.success('Cuenta eliminada correctamente')
       await logout()
       navigate('/login', { replace: true })
     } catch (err) {
