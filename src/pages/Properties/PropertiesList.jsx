@@ -477,9 +477,15 @@ export default function PropertiesList() {
             {properties.map((property) => {
               const propContracts = contractsByProperty[property.id] ?? []
               if (propContracts.length === 0) return null
+
+              const ownerName = isAdmin() ? usersMap[property.owner_id] : null
+              const groupLabelText = ownerName
+                ? `${ownerName} · ${property.address} · ${property.city}`
+                : `${property.address} · ${property.city}`
+
               return (
                 <div key={property.id} className="flex flex-col gap-1.5 mt-1.5 first:mt-0">
-                  <GroupLabel text={`${property.address} · ${property.city}`} />
+                  <GroupLabel text={groupLabelText} />
                   {propContracts.map((contract) => (
                     <ContractCard
                       key={contract.id}

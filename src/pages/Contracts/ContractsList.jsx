@@ -168,17 +168,20 @@ export default function ContractsList() {
             })
           })()}
 
-          {/* Orphaned contracts — property not found in properties array */}
+          {/* Orphaned contracts — property soft-deleted, no longer in properties array */}
           {orphaned.length > 0 && (
             <div className="mt-4">
-              {orphaned.map((contract) => (
-                <ContractCard
-                  key={contract.id}
-                  contract={contract}
-                  property={null}
-                  variant="full"
-                />
-              ))}
+              <GroupLabel text="Propiedad eliminada" />
+              <div className="flex flex-col gap-2 mt-1">
+                {orphaned.map((contract) => (
+                  <ContractCard
+                    key={contract.id}
+                    contract={contract}
+                    property={null}
+                    variant="full"
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>

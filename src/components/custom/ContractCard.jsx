@@ -177,7 +177,9 @@ export default function ContractCard({ contract, property, variant = 'full' }) {
         <div className="min-w-0">
           <p className="text-sm font-medium text-slate-900 truncate">{tenantNames}</p>
           <p className="text-xs text-slate-500 mt-0.5">
-            {property?.address} · {property?.city}
+            {property
+              ? `${property.address} · ${property.city}`
+              : 'Propiedad eliminada'}
           </p>
         </div>
         <div className="flex items-center gap-1.5 flex-wrap justify-end flex-shrink-0">
