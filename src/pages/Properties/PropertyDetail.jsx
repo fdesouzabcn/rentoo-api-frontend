@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { getProperty, deleteProperty } from '@/services/propertyService'
 import { getContracts } from '@/services/contractService'
 import EnergyBadge from '@/components/custom/EnergyBadge'
@@ -100,6 +101,7 @@ export default function PropertyDetail() {
     setIsDeleting(true)
     try {
       await deleteProperty(uuid)
+      toast.success('Propiedad eliminada')
       navigate('/properties')
     } catch (err) {
       setShowDeleteModal(false)
@@ -115,13 +117,7 @@ export default function PropertyDetail() {
   }
 
   // ── Loading ────────────────────────────────────────────────────────────────
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <LoadingSpinner />
-      </div>
-    )
-  }
+  if (loading) return <LoadingSpinner />
 
   // ── Error ──────────────────────────────────────────────────────────────────
   if (error) {
