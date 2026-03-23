@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { getProperties, deleteProperty } from '@/services/propertyService'
 import { getContracts } from '@/services/contractService'
@@ -300,6 +301,7 @@ export default function PropertiesList() {
     setIsDeleting(true)
     try {
       await deleteProperty(deleteTarget.id)
+      toast.success('Propiedad eliminada')
       setProperties((prev) => prev.filter((p) => p.id !== deleteTarget.id))
       setDeleteTarget(null)
     } catch (err) {
