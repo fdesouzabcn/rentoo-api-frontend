@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthContext'
 import ProtectedRoute from '@/router/ProtectedRoute'
+import RoleRoute from '@/router/RoleRoute'
 import Layout from '@/components/layout/Layout'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
@@ -13,6 +14,7 @@ import ContractsList from '@/pages/Contracts/ContractsList'
 import ContractDetail from '@/pages/Contracts/ContractDetail'
 import ContractCreate from '@/pages/Contracts/ContractCreate'
 import ContractEdit from '@/pages/Contracts/ContractEdit'
+import UsersList from '@/pages/Admin/UsersList'
 
 // Placeholder
 const Placeholder = ({ label }) => (
@@ -47,9 +49,10 @@ export default function App() {
           <Route path="/contracts/:uuid"      element={<Protected><ContractDetail /></Protected>} />
           <Route path="/contracts/:uuid/edit" element={<Protected><ContractEdit /></Protected>} />
 
-          <Route path="/admin/users" element={<Protected><Placeholder label="UsersList" /></Protected>} />
+          {/* Admin-only route — RoleRoute silently redirects non-admins to /dashboard */}
+          <Route path="/admin/users" element={<Protected><RoleRoute><UsersList /></RoleRoute></Protected>} />
 
-          <Route path="/dashboard" element={<Protected><Placeholder label="Dashboard" /></Protected>} />
+          <Route path="/dashboard"   element={<Protected><Placeholder label="Dashboard" /></Protected>} />
 
           {/* Redirects */}
           <Route path="/"  element={<Navigate to="/dashboard" replace />} />

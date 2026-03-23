@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { getContracts } from '@/services/contractService'
 import { getProperties } from '@/services/propertyService'
+import { getUsers } from '@/services/userService'
 import { useAuth } from '@/hooks/useAuth'
 import ContractCard from '@/components/custom/ContractCard'
 import GroupLabel from '@/components/custom/GroupLabel'
@@ -25,14 +26,25 @@ export default function ContractsList() {
 
   const [contracts, setContracts] = useState([])
   const [properties, setProperties] = useState([])
+  const [usersMap, setUsersMap] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    Promise.all([getContracts(), getProperties()])
-      .then(([contractsData, propertiesData]) => {
+    const calls = [getContracts(), getProperties()]
+    if (isAdmin()) calls.push(getUsers())
+
+    Promise.all(calls)
+      .then((results) => {
+        const [contractsData, propertiesData] = results
         setContracts(sortContracts(contractsData))
         setProperties(Array.isArray(propertiesData) ? propertiesData : [])
+
+        if (isAdmin() && results[2]) {
+          const map = {}
+          results[2].forEach((u) => { map[u.id] = u.name })
+          setUsersMap(map)
+        }
       })
       .catch(setError)
       .finally(() => setLoading(false))
@@ -112,38 +124,64 @@ export default function ContractsList() {
       {/* Grouped contract list */}
       {contracts.length > 0 && (
         <div className="flex flex-col">
-          {/* Render one group per property, in API order */}
-          {properties.map((property) => {
-            const group = contractsByProperty[property.id] ?? []
-            if (group.length === 0) return null
-            return (
-              <div key={property.id} className="mt-4 first:mt-0">
-                <GroupLabel text={`${property.address} · ${property.city}`} />
-                <div className="flex flex-col gap-2">
-                  {group.map((contract) => (
-                    <ContractCard
-                      key={contract.id}
-                      contract={contract}
-                      property={property}
-                      variant="full"
-                    />
-                  ))}
-                </div>
-              </div>
-            )
-          })}
+          {/* Build owner-sorted groups when admin */}
+          {(() => {
+            // For admin: sort property groups by owner name A→Z
+            const orderedProperties = isAdmin()
+              ? [...properties].sort((a, b) => {
+                  const nameA = usersMap[a.owner_id] ?? a.owner_id
+                  const nameB = usersMap[b.owner_id] ?? b.owner_id
+                  return nameA.localeCompare(nameB, 'es')
+                })
+              : properties
 
-          {/* Orphaned contracts — property not found in properties array */}
+            return orderedProperties.map((property) => {
+              const group = contractsByProperty[property.id] ?? []
+              if (group.length === 0) return null
+
+              const ownerName = usersMap[property.owner_id]
+
+              return (
+                <div key={property.id} className="mt-4 first:mt-0">
+                  {/* Admin: show owner above each property group */}
+                  {isAdmin() && ownerName && (
+                    <GroupLabel
+                      text={`${ownerName} · ${property.address} · ${property.city}`}
+                    />
+                  )}
+                  {/* User: standard property group label (no owner) */}
+                  {!isAdmin() && (
+                    <GroupLabel text={`${property.address} · ${property.city}`} />
+                  )}
+                  <div className="flex flex-col gap-2">
+                    {group.map((contract) => (
+                      <ContractCard
+                        key={contract.id}
+                        contract={contract}
+                        property={property}
+                        variant="full"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )
+            })
+          })()}
+
+          {/* Orphaned contracts — property soft-deleted, no longer in properties array */}
           {orphaned.length > 0 && (
             <div className="mt-4">
-              {orphaned.map((contract) => (
-                <ContractCard
-                  key={contract.id}
-                  contract={contract}
-                  property={null}
-                  variant="full"
-                />
-              ))}
+              <GroupLabel text="Propiedad eliminada" />
+              <div className="flex flex-col gap-2 mt-1">
+                {orphaned.map((contract) => (
+                  <ContractCard
+                    key={contract.id}
+                    contract={contract}
+                    property={null}
+                    variant="full"
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
