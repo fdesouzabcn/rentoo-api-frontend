@@ -71,3 +71,23 @@ export function validateCertificateNumber(value) {
   }
   return null
 }
+
+export function validateFutureOrToday(value) {
+  if (!value) return 'Este campo es obligatorio.'
+  const date = new Date(value)
+  if (isNaN(date.getTime())) return 'Introduce una fecha válida.'
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  if (date < today) return 'La fecha de inicio debe ser hoy o posterior.'
+  return null
+}
+
+export function validateDateAfter(value, afterValue) {
+  if (!value) return null       // end_date is optional
+  if (!afterValue) return null  // can't validate without a reference
+  const end = new Date(value)
+  const start = new Date(afterValue)
+  if (isNaN(end.getTime())) return 'Introduce una fecha válida.'
+  if (end <= start) return 'La fecha de fin debe ser posterior a la fecha de inicio.'
+  return null
+}
