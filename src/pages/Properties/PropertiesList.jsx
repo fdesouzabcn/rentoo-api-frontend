@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { getProperties, deleteProperty } from '@/services/propertyService'
 import { getContracts } from '@/services/contractService'
+import { getUsers } from '@/services/userService'
 import EnergyBadge from '@/components/custom/EnergyBadge'
 import ContractCard from '@/components/custom/ContractCard'
 import GroupLabel from '@/components/custom/GroupLabel'
@@ -263,6 +264,7 @@ export default function PropertiesList() {
 
   const [properties, setProperties] = useState([])
   const [contracts, setContracts] = useState([])
+  const [usersMap, setUsersMap] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [conflictBanner, setConflictBanner] = useState(false)
@@ -272,9 +274,18 @@ export default function PropertiesList() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [props, conts] = await Promise.all([getProperties(), getContracts()])
-        setProperties(props)
-        setContracts(conts)
+        const calls = [getProperties(), getContracts()]
+        if (isAdmin()) calls.push(getUsers())
+
+        const results = await Promise.all(calls)
+        setProperties(results[0])
+        setContracts(results[1])
+
+        if (isAdmin() && results[2]) {
+          const map = {}
+          results[2].forEach((u) => { map[u.id] = u.name })
+          setUsersMap(map)
+        }
       } catch (err) {
         setError(err)
       } finally {
@@ -330,6 +341,16 @@ export default function PropertiesList() {
     return acc
   }, {})
 
+  // ── Admin: group properties by owner ──────────────────────────────────────
+  // Build sorted list of unique owner IDs (A→Z by name) for admin grouping.
+  const ownersSorted = isAdmin()
+    ? [...new Set(properties.map((p) => p.owner_id))].sort((a, b) => {
+        const nameA = usersMap[a] ?? a
+        const nameB = usersMap[b] ?? b
+        return nameA.localeCompare(nameB, 'es')
+      })
+    : []
+
   return (
     <div>
       {/* 409 conflict banner */}
@@ -381,7 +402,32 @@ export default function PropertiesList() {
             Añadir tu primera propiedad →
           </button>
         </div>
+      ) : isAdmin() ? (
+        // ── Admin view: grouped by owner ──────────────────────────────────
+        <div className="flex flex-col gap-4">
+          {ownersSorted.map((ownerId) => {
+            const ownerProps = properties.filter((p) => p.owner_id === ownerId)
+            const ownerName = usersMap[ownerId] ?? ownerId
+            return (
+              <div key={ownerId}>
+                <GroupLabel
+                  text={`${ownerName} — ${ownerProps.length} propiedad${ownerProps.length !== 1 ? 'es' : ''}`}
+                />
+                <div className="flex flex-col gap-2.5 mt-1.5">
+                  {ownerProps.map((property) => (
+                    <PropertyRow
+                      key={property.id}
+                      property={property}
+                      onDelete={(p) => { setDeleteTarget(p); setConflictBanner(false) }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       ) : (
+        // ── User view: flat list ──────────────────────────────────────────
         <div className="flex flex-col gap-2.5">
           {properties.map((property) => (
             <PropertyRow
