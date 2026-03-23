@@ -16,6 +16,7 @@ import ContractCreate from '@/pages/Contracts/ContractCreate'
 import ContractEdit from '@/pages/Contracts/ContractEdit'
 import UsersList from '@/pages/Admin/UsersList'
 import Dashboard from '@/pages/Dashboard'
+import Welcome from '@/pages/Welcome'
 
 // Route wrapper helper
 const Protected = ({ children }) => (
@@ -50,9 +51,10 @@ export default function App() {
 
           <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
 
-          {/* Redirects */}
-          <Route path="/"  element={<Navigate to="/dashboard" replace />} />
-          <Route path="*"  element={<Navigate to="/dashboard" replace />} />
+          {/* Welcome page — public, no ProtectedRoute */}
+          <Route path="/" element={<Welcome />} />
+          {/* Redirect - catching-all */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
