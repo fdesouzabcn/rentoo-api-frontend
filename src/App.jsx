@@ -15,11 +15,7 @@ import ContractDetail from '@/pages/Contracts/ContractDetail'
 import ContractCreate from '@/pages/Contracts/ContractCreate'
 import ContractEdit from '@/pages/Contracts/ContractEdit'
 import UsersList from '@/pages/Admin/UsersList'
-
-// Placeholder
-const Placeholder = ({ label }) => (
-  <div className="py-20 text-center text-sm text-slate-400">{label}</div>
-)
+import Dashboard from '@/pages/Dashboard'
 
 // Route wrapper helper
 const Protected = ({ children }) => (
@@ -52,7 +48,7 @@ export default function App() {
           {/* Admin-only route — RoleRoute silently redirects non-admins to /dashboard */}
           <Route path="/admin/users" element={<Protected><RoleRoute><UsersList /></RoleRoute></Protected>} />
 
-          <Route path="/dashboard"   element={<Protected><Placeholder label="Dashboard" /></Protected>} />
+          <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
 
           {/* Redirects */}
           <Route path="/"  element={<Navigate to="/dashboard" replace />} />
